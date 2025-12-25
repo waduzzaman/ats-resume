@@ -1,13 +1,14 @@
-export const runtime = "nodejs";
-
 import Stripe from "stripe";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-10-16",
+});
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const sig = req.headers.get("stripe-signature");
+  const sig = headers().get("stripe-signature");
 
   if (!sig) {
     return NextResponse.json({ error: "No signature" }, { status: 400 });
@@ -22,12 +23,13 @@ export async function POST(req: Request) {
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-      // handle successful payment
+
+      // TODO: mark payment as successful
+      // store session.id or email
     }
 
     return NextResponse.json({ received: true });
   } catch (err) {
-    console.error("Webhook error:", err);
     return NextResponse.json({ error: "Webhook error" }, { status: 400 });
   }
 }
