@@ -1,10 +1,11 @@
-import { Document, Page, Text, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 
 type Props = {
   name: string;
   email?: string;
   phone?: string;
   resumeText: string;
+  missingKeywords?: string[]; // <-- Added this
 };
 
 const styles = StyleSheet.create({
@@ -12,9 +13,10 @@ const styles = StyleSheet.create({
   name: { fontSize: 20, fontWeight: "bold", marginBottom: 10 },
   section: { marginBottom: 10 },
   text: { lineHeight: 1.4 },
+  missingKeyword: { color: "red", lineHeight: 1.4 },
 });
 
-export default function ResumePDF({ name, email, phone, resumeText }: Props) {
+export default function ResumePDF({ name, email, phone, resumeText, missingKeywords }: Props) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -24,6 +26,18 @@ export default function ResumePDF({ name, email, phone, resumeText }: Props) {
 
         <Text style={{ marginTop: 20, fontWeight: "bold" }}>Resume:</Text>
         <Text style={styles.text}>{resumeText}</Text>
+
+        {/* Missing Keywords Section */}
+        {missingKeywords && missingKeywords.length > 0 && (
+          <View style={{ marginTop: 20 }}>
+            <Text style={{ fontWeight: "bold" }}>Missing Keywords:</Text>
+            {missingKeywords.map((word, i) => (
+              <Text key={i} style={styles.missingKeyword}>
+                {word}
+              </Text>
+            ))}
+          </View>
+        )}
       </Page>
     </Document>
   );
