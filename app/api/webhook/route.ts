@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
+    apiVersion: "2025-12-15" as any,
 });
 
 export async function POST(req: Request) {
