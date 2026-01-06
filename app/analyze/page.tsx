@@ -2,21 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-interface ATSResult {
-  score: number;
-  matched: string[];
-  missing: string[];
-}
-
 export default function AnalyzePage() {
-  const [atsResult, setAtsResult] = useState<ATSResult | null>(null);
-  const [hasPaid, setHasPaid] = useState<boolean>(false);
+  const [atsResult, setAtsResult] = useState<any>(null);
+  const [hasPaid, setHasPaid] = useState(false);
 
   useEffect(() => {
     const result = sessionStorage.getItem("atsResult");
-    if (result) {
-      setAtsResult(JSON.parse(result) as ATSResult);
-    }
+    setAtsResult(result ? JSON.parse(result) : null);
 
     setHasPaid(sessionStorage.getItem("hasPaid") === "true");
   }, []);
@@ -57,7 +49,7 @@ export default function AnalyzePage() {
         </h3>
 
         <div className="flex flex-wrap gap-2">
-          {matched.map((k) => (
+          {matched.map((k: string) => (
             <span
               key={k}
               className="
@@ -83,7 +75,7 @@ export default function AnalyzePage() {
             !hasPaid ? "blur-sm select-none pointer-events-none" : ""
           }`}
         >
-          {(hasPaid ? missing : previewMissing).map((k) => (
+          {(hasPaid ? missing : previewMissing).map((k: string) => (
             <span
               key={k}
               className="

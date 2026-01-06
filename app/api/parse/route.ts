@@ -1,10 +1,13 @@
+
 import { NextResponse } from "next/server";
 import { parseResume } from "@/lib/resume-parser";
+
+export const runtime = "nodejs"; // 🔴 REQUIRED
 
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
-    const file = formData.get("resume") as File;
+    const file = formData.get("resume") as File | null;
 
     if (!file) {
       return NextResponse.json(
@@ -15,13 +18,15 @@ export async function POST(req: Request) {
 
     const text = await parseResume(file);
 
-    return NextResponse.json({
-      success: true,
-      text,
-    });
+    return NextResponse.json({ success: true, text });
   } catch (error) {
+    console.error("Resume parse error:", error);
+
     return NextResponse.json(
-      { error: "Failed to parse resume" },
+      {
+        error: "Failed to parse resume",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

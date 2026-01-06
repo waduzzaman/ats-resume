@@ -34,7 +34,7 @@ export default function UploadForm() {
       return;
     }
 
-    if (freeScans >= 1 && !hasPaid) {
+    if (freeScans >= 5 && !hasPaid) {
       window.location.href = "/analyze";
       return;
     }
@@ -115,7 +115,7 @@ export default function UploadForm() {
         <input
           id="resume-upload"
           type="file"
-          accept=".pdf,.docx"
+          accept=".pdf,.docx, .doc"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
           className="hidden"
         />
